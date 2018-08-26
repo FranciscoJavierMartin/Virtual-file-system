@@ -14,6 +14,8 @@ object Command{
   val LS_NAME = "ls"
   val PWD_NAME = "pwd"
   val TOUCH_NAME = "touch"
+  val RM_NAME = "rm"
+  val ECHO_NAME = "echo"
 
   def emptyCommand: Command = new Command {
     override def apply(state: State): State = state
@@ -48,6 +50,16 @@ object Command{
         incompleteCommand(CD_NAME)
       else
         new Cd(tokens(1))
+    else if (RM_NAME.equals(command_name))
+      if (tokens.length < 2)
+        incompleteCommand(RM_NAME)
+      else
+        new Rm(tokens(1))
+    else if (ECHO_NAME.equals(command_name))
+      if (tokens.length < 2)
+        incompleteCommand(ECHO_NAME)
+      else
+        new Echo(tokens(1))
     else
       new UnkownCommand
   }

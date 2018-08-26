@@ -40,7 +40,7 @@ abstract class CreateEntry(name: String) extends Command {
 
     val newRoot = updateStructure(state.root, allDirsInPath, newEntry)
 
-    val newWd = newRoot.findDescendent(allDirsInPath)
+    val newWd = newRoot.findDescendant(allDirsInPath)
 
     State(newRoot, newWd)
   }
