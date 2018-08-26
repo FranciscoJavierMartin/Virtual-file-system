@@ -43,6 +43,11 @@ object Command{
         incompleteCommand(TOUCH_NAME)
       else
         new Touch(tokens(1))
+    else if (CD_NAME.equals(command_name))
+      if (tokens.length < 2)
+        incompleteCommand(CD_NAME)
+      else
+        new Cd(tokens(1))
     else
       new UnkownCommand
   }

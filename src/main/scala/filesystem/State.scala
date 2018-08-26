@@ -6,7 +6,7 @@ class State (val root:Directory,val wd:Directory,val output:String){
 
   def show():Unit={
     println(output)
-    print(s"$wd ${State.SHELL_TOKEN}")
+    print(s"${wd.path} ${State.SHELL_TOKEN}")
   }
 
   def setMessage(message:String):State=
