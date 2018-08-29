@@ -12,9 +12,14 @@ object FileSystem extends App{
   val scanner=new Scanner(System.in)
 
   while(true){
-    state.show
+    state.show()
     val input=scanner.nextLine()
     state=Command.from(input).apply(state)
   }
 
+  // Alternative implementation using functional approach
+  /*io.Source.stdin.getLines().foldLeft(State(root,root))((currentState,newLine)=>{
+    currentState.show()
+    Command.from(newLine).apply(currentState)
+  })*/
 }

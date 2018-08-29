@@ -2,21 +2,9 @@ package commands
 
 import filesystem.State
 
-trait Command {
+trait Command extends (State => State) {}
 
-  def apply(state:State):State
-}
-
-object Command{
-
-  val MKDIR_NAME: String = "mkdir"
-  val CD_NAME: String = "cd"
-  val LS_NAME = "ls"
-  val PWD_NAME = "pwd"
-  val TOUCH_NAME = "touch"
-  val RM_NAME = "rm"
-  val ECHO_NAME = "echo"
-  val CAT_NAME = "cat"
+object Command {
 
   def emptyCommand: Command = new Command {
     override def apply(state: State): State = state
@@ -28,45 +16,60 @@ object Command{
 
   def from(input: String): Command = {
     val tokens: Array[String] = input.split(" ")
-    val command_name = tokens(0)
 
     if (input.isEmpty || tokens.isEmpty)
       emptyCommand
-    else if (MKDIR_NAME.equals(command_name))
-      if (tokens.length < 2)
-        incompleteCommand(MKDIR_NAME)
-      else
-        new Mkdir(tokens(1))
-    else if (LS_NAME.equals(command_name))
-      new Ls
-    else if (PWD_NAME.equals(command_name))
-      new Pwd
-    else if (TOUCH_NAME.equals(command_name))
-      if (tokens.length < 2)
-        incompleteCommand(TOUCH_NAME)
-      else
-        new Touch(tokens(1))
-    else if (CD_NAME.equals(command_name))
-      if (tokens.length < 2)
-        incompleteCommand(CD_NAME)
-      else
-        new Cd(tokens(1))
-    else if (RM_NAME.equals(command_name))
-      if (tokens.length < 2)
-        incompleteCommand(RM_NAME)
-      else
-        new Rm(tokens(1))
-    else if (ECHO_NAME.equals(command_name))
-      if (tokens.length < 2)
-        incompleteCommand(ECHO_NAME)
-      else
-        new Echo(tokens.tail)
-    else if (CAT_NAME.equals(command_name))
-      if (tokens.length < 2)
-        incompleteCommand(CAT_NAME)
-      else
-        new Cat(tokens(1))
-    else
-      new UnkownCommand
+    else tokens(0) match {
+      case CommandsNames.MKDIR_COMMAND_NAME =>
+        if (tokens.length < 2)
+          incompleteCommand(CommandsNames.MKDIR_COMMAND_NAME)
+        else
+          new Mkdir(tokens(1))
+      case CommandsNames.LS_COMMAND_NAME =>
+        new Ls
+      case CommandsNames.PWD_COMMAND_NAME =>
+        new Pwd
+      case CommandsNames.TOUCH_COMMAND_NAME =>
+        if (tokens.length < 2)
+          incompleteCommand(CommandsNames.TOUCH_COMMAND_NAME)
+        else
+          new Touch(tokens(1))
+      case CommandsNames.CD_COMMAND_NAME =>
+        if (tokens.length < 2)
+          incompleteCommand(CommandsNames.CD_COMMAND_NAME)
+        else
+          new Cd(tokens(1))
+      case CommandsNames.RM_COMMAND_NAME =>
+        if (tokens.length < 2)
+          incompleteCommand(CommandsNames.RM_COMMAND_NAME)
+        else
+          new Rm(tokens(1))
+      case CommandsNames.ECHO_COMMAND_NAME =>
+        if (tokens.length < 2)
+          incompleteCommand(CommandsNames.ECHO_COMMAND_NAME)
+        else
+          new Echo(tokens.tail)
+      case CommandsNames.CAT_COMMAND_NAME =>
+        if (tokens.length < 2)
+          incompleteCommand(CommandsNames.CAT_COMMAND_NAME)
+        else
+          new Cat(tokens(1))
+      case CommandsNames.COPY_COMMAND_NAME =>
+        if (tokens.length < 3)
+          incompleteCommand(CommandsNames.COPY_COMMAND_NAME)
+        else
+          new Copy(tokens(1), tokens(2))
+      case CommandsNames.MOVE_COMMAND_NAME =>
+        if (tokens.length < 3)
+          incompleteCommand(CommandsNames.MOVE_COMMAND_NAME)
+        else
+          new Move(tokens(1), tokens(2))
+      case CommandsNames.HELP_COMMAND_NAME =>
+        if (tokens.length < 2)
+          new Help("")
+        else
+          new Help(tokens(1))
+      case _ => new UnkownCommand
+    }
   }
 }
