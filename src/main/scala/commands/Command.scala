@@ -16,6 +16,7 @@ object Command{
   val TOUCH_NAME = "touch"
   val RM_NAME = "rm"
   val ECHO_NAME = "echo"
+  val CAT_NAME = "cat"
 
   def emptyCommand: Command = new Command {
     override def apply(state: State): State = state
@@ -59,7 +60,12 @@ object Command{
       if (tokens.length < 2)
         incompleteCommand(ECHO_NAME)
       else
-        new Echo(tokens(1))
+        new Echo(tokens.tail)
+    else if (CAT_NAME.equals(command_name))
+      if (tokens.length < 2)
+        incompleteCommand(CAT_NAME)
+      else
+        new Cat(tokens(1))
     else
       new UnkownCommand
   }
