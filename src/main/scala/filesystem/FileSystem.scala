@@ -1,25 +1,18 @@
 package filesystem
 
-import java.util.Scanner
-
 import commands.Command
 import files.Directory
 
 object FileSystem extends App{
 
   val root=Directory.ROOT
-  var state=State(root,root)
-  val scanner=new Scanner(System.in)
 
-  while(true){
+  val initial = State(root, root).setMessage("Start to write")
+  initial.show()
+
+  io.Source.stdin.getLines().foldLeft(initial)((currentState, newLine) => {
+    val state = Command.from(newLine).apply(currentState)
     state.show()
-    val input=scanner.nextLine()
-    state=Command.from(input).apply(state)
-  }
-
-  // Alternative implementation using functional approach
-  /*io.Source.stdin.getLines().foldLeft(State(root,root))((currentState,newLine)=>{
-    currentState.show()
-    Command.from(newLine).apply(currentState)
-  })*/
+    state
+  })
 }
